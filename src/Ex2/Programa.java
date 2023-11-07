@@ -1,70 +1,44 @@
 package Ex2;
 
-public class Programa {
-    public static void main(String[] args) {
-        int[] compte = { 1000 }; // Valor compartit
+public class Programa{
 
-        FilSuma sumaFil = new FilSuma(compte);
-        FilResta restaFil = new FilResta(compte);
+        public static void main(String[] args) {
+            int[] compte = { 1000 }; // Inicialitzem "compte" amb el valor 1000
 
-        sumaFil.start();
-        restaFil.start();
+            Thread filSuma = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int valor_compte = compte[0];
+                    System.out.println("Fil suma => compte: " + valor_compte);
+                    valor_compte += 10;
+                    System.out.println("Fil suma => registre: " + valor_compte);
+                    compte[0] = valor_compte;
+                    System.out.println("Fil suma => compte: " + compte[0]);
+                }
+            });
 
-        try {
-            sumaFil.join();
-            restaFil.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread filResta = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int valor_compte = compte[0];
+                    System.out.println("Fil resta => compte: " + valor_compte);
+                    valor_compte -= 10;
+                    System.out.println("Fil resta => registre: " + valor_compte);
+                    compte[0] = valor_compte;
+                    System.out.println("Fil resta => compte: " + compte[0]);
+                }
+            });
+
+            filSuma.start();
+            filResta.start();
+
+            try {
+                filSuma.join();
+                filResta.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("Fil principal: " + compte[0]);
         }
-
-        System.out.println("Fil principal: " + compte[0]);
     }
-}
-
-class FilSuma extends Thread {
-    private int[] compte;
-
-    public FilSuma(int[] compte) {
-        this.compte = compte;
-    }
-
-    @Override
-    public void run() {
-        int registre = compte[0];
-        System.out.println("Fil suma => compte: " + registre);
-
-        // Realitza la suma
-        registre += 10;
-
-        System.out.println("Fil suma => registre: " + registre);
-
-        // Assigna el valor del registre a compte
-        compte[0] = registre;
-
-        System.out.println("Fil suma => compte: " + compte[0]);
-    }
-}
-
-class FilResta extends Thread {
-    private int[] compte;
-
-    public FilResta(int[] compte) {
-        this.compte = compte;
-    }
-
-    @Override
-    public void run () {
-        int registre = compte[0];
-        System.out.println("Fil resta => compte: " + registre);
-
-        // Realitza la resta
-        registre -= 10;
-
-        System.out.println("Fil resta => registre: " + registre);
-
-        // Assigna el valor del registre a compte
-        compte[0] = registre;
-
-        System.out.println("Fil resta  => compte: " + compte[0]);
-    }
-}
