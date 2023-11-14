@@ -1,4 +1,6 @@
-package Ex5;
+package Ex5.V1;
+
+import Ex5.V1.TicTacThread;
 
 import java.util.concurrent.Semaphore;
 

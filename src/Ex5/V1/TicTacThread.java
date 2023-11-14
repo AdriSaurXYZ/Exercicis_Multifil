@@ -1,4 +1,4 @@
-package Ex5;
+package Ex5.V1;
 import java.util.concurrent.Semaphore;
 
 class TicTacThread extends Thread {
